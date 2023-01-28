@@ -2,15 +2,16 @@ package io.n2n.connection;
 
 import io.n2n.node.NodeInfo;
 import io.n2n.socket.N2NSocket;
+import io.n2n.socket.SocketFactory;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
 
 /**
  * A connection that has a socket and data which will be sent or received already.
- * Doesn't contain sender's info
+ * Doesn't contain sender's info, but only sender's
  */
-public class Connection {
+public class Connection implements AutoCloseable {
     private NodeInfo receiver;
     private Message msg;
     private N2NSocket socket;
@@ -20,7 +21,7 @@ public class Connection {
     }
 
     public Connection(NodeInfo receiver, Message msg) throws IOException, UnknownHostException {
-        this(receiver, msg, null);
+        this(receiver, msg, SocketFactory.create(receiver.getHost(), receiver.getPort()));
     }
 
     public Connection(NodeInfo receiver, Message msg, N2NSocket socket) {
@@ -31,6 +32,7 @@ public class Connection {
 
     public void send() {
         if (msg == null) {
+            System.out.println("Can not send a null message");
             return;
         }
 
@@ -50,18 +52,6 @@ public class Connection {
         }
     }
 
-    public void close() {
-        if (this.socket == null) {
-            return;
-        }
-
-        try {
-            this.socket.close();
-        } catch (IOException e) {
-            System.out.println("Error while closing a socket: " + e);
-        }
-    }
-
     public Message getMsg() {
         return msg;
     }
@@ -78,4 +68,15 @@ public class Connection {
         return socket;
     }
 
+    /**
+     * Used in try-with-resources
+     * @see AutoCloseable#close()
+     * @throws IOException
+     */
+    @Override
+    public void close() throws IOException {
+        if (this.socket != null) {
+            this.socket.close();
+        }
+    }
 }

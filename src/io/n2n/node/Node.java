@@ -3,6 +3,7 @@ package io.n2n.node;
 import io.n2n.connection.Connection;
 import io.n2n.connection.Message;
 import io.n2n.connection.reply.ReplyCheck;
+import io.n2n.connection.reply.ReplyNoCheck;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,12 +18,15 @@ public class Node {
     private NodeInfo info;
     private NodeSettings settings;
 
+    public List<Message> sendData(NodeInfo node, Message msg) {
+        return sendData(node, msg, new ReplyNoCheck());
+    }
+
     public List<Message> sendData(NodeInfo node, Message msg, ReplyCheck replyCheck) {
         List<Message> replies = new ArrayList<>();
 
-        try {
-            // create a connection
-            Connection connection = new Connection(node, msg);
+        // create a connection
+        try (Connection connection = new Connection(node, msg)) {
             connection.send();
 
             // receive replies from the receiver
@@ -31,9 +35,6 @@ public class Node {
                 replies.add(reply);
                 reply = connection.receive();
             }
-
-            // close the connection
-            connection.close();
         } catch (IOException e) {
             System.out.println("Error while sending data to " + node + ": " + e);
         }
