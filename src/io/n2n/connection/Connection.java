@@ -52,6 +52,30 @@ public class Connection implements AutoCloseable {
         }
     }
 
+    /**
+     * Constructs a connection and extract message from the socket.<br>
+     * Use {@link #getMsg()} to get message extracted from the socket.
+     *
+     * @param socket the socket sent by other node
+     * @return the connection that has a message only received from the socket
+     */
+    public static Connection fromSocket(N2NSocket socket) {
+        try {
+            return new Connection(null, new Message(socket));
+        } catch (IOException e) {
+            System.out.println("Error while reading data from the socket: " + e);
+            return null;
+        }
+    }
+
+    public NodeInfo getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(NodeInfo receiver) {
+        this.receiver = receiver;
+    }
+
     public Message getMsg() {
         return msg;
     }
@@ -60,18 +84,19 @@ public class Connection implements AutoCloseable {
         this.msg = msg;
     }
 
-    public NodeInfo getReceiver() {
-        return receiver;
-    }
-
     public N2NSocket getSocket() {
         return socket;
     }
 
+    public void setSocket(N2NSocket socket) {
+        this.socket = socket;
+    }
+
     /**
-     * Used in try-with-resources
-     * @see AutoCloseable#close()
+     * Supports {@link AutoCloseable}
+     *
      * @throws IOException
+     * @see AutoCloseable#close()
      */
     @Override
     public void close() throws IOException {
