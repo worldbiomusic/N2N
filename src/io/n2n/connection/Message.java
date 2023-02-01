@@ -2,10 +2,12 @@ package io.n2n.connection;
 
 import io.n2n.exception.socket.SocketDataLengthException;
 import io.n2n.socket.N2NSocket;
+import io.n2n.util.Config;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 /**
@@ -13,49 +15,91 @@ import java.util.Arrays;
  * Provides methods for converting data to/from byte arrays.
  */
 public class Message {
+    private byte[] type;
     private byte[] data;
 
-    public Message(byte[] data) {
+    /**
+     * Constructs a new node message.
+     *
+     * @param type the message type ({@link Config#MSG_TYPE_FIELD_LENGTH} bytes)
+     * @param data the message type
+     */
+    public Message(byte[] type, byte[] data) {
+        this.type = type;
         this.data = data;
     }
 
-    public Message(String data) {
-        this.data = data.getBytes();
+    /**
+     * Constructs a new node message with strings.<br>
+     * Using {@link StandardCharsets#UTF_8}
+     *
+     * @param type the message type (4 characters)
+     * @param data the message data
+     */
+    public Message(String type, String data) {
+        this.type = type.getBytes(Config.CHARSET);
+        this.data = data.getBytes(Config.CHARSET);
     }
 
+    /**
+     * Constructs a new node message by reading data from the given socket connection.<br>
+     * Data format: type({@link Config#MSG_TYPE_FIELD_LENGTH} bytes) | length of data({@link Config#MSG_DATA_FIELD_LENGTH} bytes) | data (length of data)
+     *
+     * @param socket a socket connection
+     * @throws IOException               if I/O error occurs
+     * @throws SocketDataLengthException if data length is incorrect while reading
+     */
     public Message(N2NSocket socket) throws IOException, SocketDataLengthException {
-        byte[] dataLengthBytes = new byte[4];
+        // read first 4 bytes to get type of the message
+        this.type = new byte[Config.MSG_TYPE_FIELD_LENGTH];
+        if (socket.read(this.type) != Config.MSG_TYPE_FIELD_LENGTH) {
+            throw new SocketDataLengthException("Number of type bytes is not " + Config.MSG_TYPE_FIELD_LENGTH);
+        }
 
-        // read first 4 bytes to get data length
-        if (socket.read(dataLengthBytes) != 4) {
-            throw new SocketDataLengthException("Number of data length bytes is not 4");
+        byte[] dataLengthBytes = new byte[Config.MSG_DATA_FIELD_LENGTH];
+        // read 4 bytes to get data length
+        if (socket.read(dataLengthBytes) != Config.MSG_DATA_FIELD_LENGTH) {
+            throw new SocketDataLengthException("Number of data length bytes is not " + Config.MSG_DATA_FIELD_LENGTH);
         }
 
         int dataLength = new BigInteger(dataLengthBytes).intValue();
         this.data = new byte[dataLength];
-
-        // read all the data
+        // read remained data
         if (socket.read(data) != dataLength) {
             throw new SocketDataLengthException("Data length is not " + dataLength);
         }
     }
 
+    public byte[] getTypeBytes() {
+        return this.type;
+    }
+
+    public String getType() {
+        return new String(this.type, Config.CHARSET);
+    }
 
     public byte[] getDataBytes() {
         return data.clone();
     }
 
     public String getData() {
-        return String.valueOf(data);
+        return new String(this.data, Config.CHARSET);
     }
 
+    /**
+     * Returns a packed representation of this message as an array of bytes.
+     *
+     * @return byte array of type and data with length
+     */
     public byte[] toBytes() {
         int dataLength = this.data.length;
-        byte[] bytes = new byte[4 + dataLength];
-        byte[] dataLengthBytes = ByteBuffer.allocate(4).putInt(dataLength).array();
+        byte[] bytes = new byte[Config.MSG_TYPE_FIELD_LENGTH + Config.MSG_DATA_FIELD_LENGTH + dataLength];
+        byte[] dataLengthBytes = ByteBuffer.allocate(Config.MSG_DATA_FIELD_LENGTH).putInt(dataLength).array();
 
-        System.arraycopy(dataLengthBytes, 0, bytes, 0, dataLengthBytes.length);
-        System.arraycopy(this.data, 0, bytes, 4, dataLength);
+        System.arraycopy(this.type, 0, bytes, 0, Config.MSG_TYPE_FIELD_LENGTH);
+        System.arraycopy(dataLengthBytes, 0, bytes, Config.MSG_TYPE_FIELD_LENGTH, Config.MSG_DATA_FIELD_LENGTH);
+        System.arraycopy(this.data, 0, bytes, Config.MSG_TYPE_FIELD_LENGTH +
+                Config.MSG_DATA_FIELD_LENGTH, dataLength);
 
         return bytes;
     }
@@ -63,16 +107,15 @@ public class Message {
     @Override
     public String toString() {
         return "Message{" +
+                "type=" + getType() +
                 "data=" + getData() +
                 '}';
     }
 
     public static void main(String[] args) {
-        System.out.println("hi");
-        byte[] a = ByteBuffer.allocate(4).putInt(300).array();
-        for (byte b : a) {
-            System.out.print((byte) b + " ");
-        }
+        System.out.println("start");
 
+        Message msg = new Message("abcd", "hello there");
+        System.out.println(msg.getType() + ":" + msg.getData());
     }
 }
