@@ -26,18 +26,30 @@ public class Node {
         List<Message> replies = new ArrayList<>();
 
         // create a connection
-        try (Connection connection = new Connection(node, msg)) {
-            connection.send();
+        try (Connection connection = new Connection(node)) {
+            connection.sendData(msg);
 
             // receive replies from the receiver
-            Message reply = connection.receive();
+            Message reply = connection.receiveData();
             while (reply != null && !replyCheck.isEnd(reply)) {
                 replies.add(reply);
-                reply = connection.receive();
+                reply = connection.receiveData();
             }
         } catch (IOException e) {
             System.out.println("Error while sending data to " + node + ": " + e);
         }
         return replies;
+    }
+
+    public void startListeningSocket() {
+        new SocketListener(this).start();
+    }
+
+    public NodeInfo getInfo() {
+        return info;
+    }
+
+    public NodeSettings getSettings() {
+        return settings;
     }
 }

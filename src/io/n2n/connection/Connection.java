@@ -13,57 +13,35 @@ import java.net.UnknownHostException;
  */
 public class Connection implements AutoCloseable {
     private NodeInfo receiver;
-    private Message msg;
     private N2NSocket socket;
 
     public Connection(NodeInfo receiver) throws IOException, UnknownHostException {
-        this(receiver, null);
+        this(receiver, SocketFactory.create(receiver.getHost(), receiver.getPort()));
     }
 
-    public Connection(NodeInfo receiver, Message msg) throws IOException, UnknownHostException {
-        this(receiver, msg, SocketFactory.create(receiver.getHost(), receiver.getPort()));
-    }
-
-    public Connection(NodeInfo receiver, Message msg, N2NSocket socket) {
-        this.msg = msg;
+    public Connection(NodeInfo receiver, N2NSocket socket) {
         this.receiver = receiver;
         this.socket = socket;
     }
 
-    public void send() {
+    public void sendData(Message msg) {
         if (msg == null) {
             System.out.println("Can not send a null message");
             return;
         }
 
         try {
-            this.socket.write(this.msg.toBytes());
+            this.socket.write(msg.toBytes());
         } catch (IOException e) {
             System.out.println("Error while sending a message: " + e);
         }
     }
 
-    public Message receive() {
+    public Message receiveData() {
         try {
             return new Message(this.socket);
         } catch (IOException e) {
             System.out.println("Error while receiving a reply: " + e);
-            return null;
-        }
-    }
-
-    /**
-     * Constructs a connection and extract message from the socket.<br>
-     * Use {@link #getMsg()} to get message extracted from the socket.
-     *
-     * @param socket the socket sent by other node
-     * @return the connection that has a message only received from the socket
-     */
-    public static Connection fromSocket(N2NSocket socket) {
-        try {
-            return new Connection(null, new Message(socket));
-        } catch (IOException e) {
-            System.out.println("Error while reading data from the socket: " + e);
             return null;
         }
     }
@@ -74,14 +52,6 @@ public class Connection implements AutoCloseable {
 
     public void setReceiver(NodeInfo receiver) {
         this.receiver = receiver;
-    }
-
-    public Message getMsg() {
-        return msg;
-    }
-
-    public void setMsg(Message msg) {
-        this.msg = msg;
     }
 
     public N2NSocket getSocket() {
