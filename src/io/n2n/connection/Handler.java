@@ -9,5 +9,6 @@ import io.n2n.connection.Connection;
  * The handler is carried out by the {@link Dispatcher} registered to a Node.
  */
 public interface Handler {
-    void handle(Connection connection);
+    void handle(Connection connection, Message msg);
+    String getName();
 }
