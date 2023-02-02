@@ -95,4 +95,18 @@ public class Dispatcher {
     public void dispatch(Socket socket) throws IOException {
         new HandlerDispatcher(socket).run();
     }
+
+    @Override
+    public String toString() {
+        String handlerNameList = "[ ";
+        for (Handler h : getHandlers()) {
+            handlerNameList += h.getName() + ", ";
+        }
+        handlerNameList = handlerNameList.substring(0, handlerNameList.length() - 2); // remove last ", "
+        handlerNameList += " ]";
+
+        return "Dispatcher{" +
+                "handlers=" + handlerNameList +
+                '}';
+    }
 }

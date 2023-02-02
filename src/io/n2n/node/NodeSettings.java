@@ -1,11 +1,8 @@
 package io.n2n.node;
 
 import io.n2n.connection.Dispatcher;
-import io.n2n.connection.Handler;
 import io.n2n.router.Router;
 import io.n2n.stabilizer.Stabilizer;
-
-import java.util.Map;
 
 /**
  * Manages node's settings like state, number of max nodes and tools(router and stabilizer) also.
@@ -16,8 +13,18 @@ public class NodeSettings {
     private int backlog;
     private Router router;
     private Stabilizer stabilizer;
-    private Map<String, NodeInfo> neighbors; // using Map for efficiency
+    private NeighborManager neighborManager;
     private Dispatcher dispatcher;
+
+    public NodeSettings() {
+        this.active = false;
+        this.maxNodes = 5;
+        this.backlog = 5;
+//        this.router =  -> set with normal router
+//        this.stabilizer = -> set with normal stabilizer
+        this.neighborManager = new NeighborManager(this);
+        this.dispatcher = new Dispatcher();
+    }
 
 
     public boolean isActive() {
@@ -60,19 +67,28 @@ public class NodeSettings {
         this.stabilizer = stabilizer;
     }
 
-//    public Map<String, NodeInfo> getNeighbors() {
-//        return neighbors;
-//    }
-//
-//    public void setNeighbors(Map<String, NodeInfo> neighbors) {
-//        this.neighbors = neighbors;
-//    }
-
     public Dispatcher getDispatcher() {
         return dispatcher;
     }
 
     public void setDispatcher(Dispatcher dispatcher) {
         this.dispatcher = dispatcher;
+    }
+
+    public NeighborManager getNeighborManager() {
+        return neighborManager;
+    }
+
+    @Override
+    public String toString() {
+        return "NodeSettings{" +
+                "active=" + active +
+                ", maxNodes=" + maxNodes +
+                ", backlog=" + backlog +
+                ", router=" + router +
+                ", stabilizer=" + stabilizer +
+                ", neighborManager=" + neighborManager +
+                ", dispatcher=" + dispatcher +
+                '}';
     }
 }
