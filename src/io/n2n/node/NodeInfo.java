@@ -13,7 +13,8 @@ public class NodeInfo {
 
     /**
      * Initializes a new NodeInfo object.
-     * @param id this node's unique identifier in the network
+     *
+     * @param id   this node's unique identifier in the network
      * @param host the ip address
      * @param port the tcp port
      * @throws NullPointerException
@@ -48,16 +49,22 @@ public class NodeInfo {
                 '}';
     }
 
+    /**
+     * Checks id is equivalent or not.
+     *
+     * @param o the other object
+     * @return true if id is equivalent or false
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NodeInfo nodeInfo = (NodeInfo) o;
-        return port == nodeInfo.port && id.equals(nodeInfo.id) && host.equals(nodeInfo.host);
+        return id.equals(nodeInfo.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, host, port);
+        return Objects.hash(id);
     }
 }
