@@ -1,6 +1,6 @@
 package io.n2n.connection;
 
-import io.n2n.exception.socket.SocketDataLengthException;
+import io.n2n.exception.socket.SocketFieldLengthException;
 import io.n2n.socket.N2NSocket;
 import io.n2n.util.Config;
 
@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 /**
  * A wrapper class of data which can be one of any types.
@@ -47,26 +46,26 @@ public class Message {
      *
      * @param socket a socket connection
      * @throws IOException               if I/O error occurs
-     * @throws SocketDataLengthException if data length is incorrect while reading
+     * @throws SocketFieldLengthException if data length is incorrect while reading
      */
-    public Message(N2NSocket socket) throws IOException, SocketDataLengthException {
+    public Message(N2NSocket socket) throws IOException, SocketFieldLengthException {
         // read first 4 bytes to get type of the message
         this.type = new byte[Config.MSG_TYPE_FIELD_LENGTH];
         if (socket.read(this.type) != Config.MSG_TYPE_FIELD_LENGTH) {
-            throw new SocketDataLengthException("Number of type bytes is not " + Config.MSG_TYPE_FIELD_LENGTH);
+            throw new SocketFieldLengthException("Number of type bytes is not " + Config.MSG_TYPE_FIELD_LENGTH);
         }
 
         byte[] dataLengthBytes = new byte[Config.MSG_DATA_FIELD_LENGTH];
         // read 4 bytes to get data length
         if (socket.read(dataLengthBytes) != Config.MSG_DATA_FIELD_LENGTH) {
-            throw new SocketDataLengthException("Number of data length bytes is not " + Config.MSG_DATA_FIELD_LENGTH);
+            throw new SocketFieldLengthException("Number of data length bytes is not " + Config.MSG_DATA_FIELD_LENGTH);
         }
 
         int dataLength = new BigInteger(dataLengthBytes).intValue();
         this.data = new byte[dataLength];
         // read remained data
         if (socket.read(data) != dataLength) {
-            throw new SocketDataLengthException("Data length is not " + dataLength);
+            throw new SocketFieldLengthException("Data length is not " + dataLength);
         }
     }
 
