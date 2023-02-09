@@ -41,7 +41,7 @@ public class Connection implements AutoCloseable {
         try {
             return new Message(this.socket);
         } catch (IOException e) {
-            System.out.println("Error while receiving a reply: " + e);
+            System.out.println("No more reply or error while receiving a reply: " + e);
             return null;
         }
     }

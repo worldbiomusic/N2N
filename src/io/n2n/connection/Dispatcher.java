@@ -5,9 +5,8 @@ import io.n2n.socket.SocketFactory;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Manages handlers for a node.
@@ -67,23 +66,30 @@ public class Dispatcher {
         return this.handlers.remove(name) != null;
     }
 
+    public boolean hasHandler(String name) {
+        return this.handlers.containsKey(name);
+    }
+
     public Handler getHandler(String name) {
         return this.handlers.get(name);
     }
 
     /**
-     * Dispatches a connection with a registered handler.
+     * Dispatches a connection with a registered handler.<br>
+     * Invoked by a handler dispatcher only.
      *
      * @param name       the name of the handler
      * @param connection the connection which will be processed by a handler
      * @param msg        the message received from the connection
      */
-    public void handle(String name, Connection connection, Message msg) {
-        this.handlers.get(name).handle(connection, msg);
+    private void handle(String name, Connection connection, Message msg) {
+        if (hasHandler(name)) {
+            this.handlers.get(name).handle(connection, msg);
+        }
     }
 
     public List<Handler> getHandlers() {
-        return (List<Handler>) this.handlers.values();
+        return new ArrayList<>(this.handlers.values());
     }
 
     /**
@@ -98,15 +104,9 @@ public class Dispatcher {
 
     @Override
     public String toString() {
-        String handlerNameList = "[ ";
-        for (Handler h : getHandlers()) {
-            handlerNameList += h.getName() + ", ";
-        }
-        handlerNameList = handlerNameList.substring(0, handlerNameList.length() - 2); // remove last ", "
-        handlerNameList += " ]";
-
+        String handlerNames = getHandlers().stream().map(h -> h.getName()).collect(Collectors.joining(", "));
         return "Dispatcher{" +
-                "handlers=" + handlerNameList +
+                "handlers=" + handlerNames +
                 '}';
     }
 }

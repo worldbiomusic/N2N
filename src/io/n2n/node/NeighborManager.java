@@ -1,5 +1,6 @@
 package io.n2n.node;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ public class NeighborManager {
     }
 
     public List<NodeInfo> getNodes() {
-        return (List<NodeInfo>) nodes.values();
+        return new ArrayList<>(nodes.values());
     }
 
     public boolean addNode(NodeInfo node) {

@@ -3,6 +3,7 @@ package io.n2n.node;
 import io.n2n.connection.Dispatcher;
 import io.n2n.router.Router;
 import io.n2n.stabilizer.Stabilizer;
+import io.n2n.stabilizer.StabilizerRunner;
 
 /**
  * Manages node's settings like state, number of max nodes and tools(router and stabilizer) also.
@@ -17,11 +18,11 @@ public class NodeSettings {
     private Dispatcher dispatcher;
 
     public NodeSettings() {
-        this.active = false;
-        this.maxNodes = 5;
+        this.active = true;
+        this.maxNodes = 10;
         this.backlog = 5;
-//        this.router =  -> set with normal router
-//        this.stabilizer = -> set with normal stabilizer
+//        this.router = need to register when use
+//        this.stabilizer = -> need to register when use
         this.neighborManager = new NeighborManager(this);
         this.dispatcher = new Dispatcher();
     }

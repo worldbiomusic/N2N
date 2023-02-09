@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 /**
  * A listener that listens for incoming client socket and
@@ -26,21 +27,26 @@ public class SocketListener extends Thread {
             // for many incoming connections
             server.setReuseAddress(true);
             server.setSoTimeout(Config.SOCKET_CONNECTION_TIMEOUT);
+            while (settings.isActive()) {
+                try {
+                    Socket client = server.accept();
+                    // set infinite timeout: socket will be closed after a handler dispatched it
+                    client.setSoTimeout(Config.SOCKET_READ_TIMEOUT);
+                    System.out.println("New connection");
 
-            while(settings.isActive()) {
-                Socket client = server.accept();
-                // set infinite timeout: socket will be closed after a handler dispatched it
-                client.setSoTimeout(Config.SOCKET_READ_TIMEOUT);
-                System.out.println("New connection");
-
-                // pass the socket to dispatcher
-                settings.getDispatcher().dispatch(client);
+                    // pass the socket to dispatcher
+                    settings.getDispatcher().dispatch(client);
+                } catch (SocketTimeoutException e) {
+//                    System.out.println("Socket timeout. Started again...");
+                    continue;
+                }
             }
         } catch (SocketException e) {
             System.out.println("Exception while making a socket: " + e);
         } catch (IOException e) {
             System.out.println("Exception while opening a socket: " + e);
         }
+
 
     }
 }

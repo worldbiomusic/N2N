@@ -1,6 +1,8 @@
 package io.n2n.exception.socket;
 
-public class SocketFieldLengthException extends RuntimeException{
+import java.net.SocketException;
+
+public class SocketFieldLengthException extends SocketException {
     public SocketFieldLengthException(String msg) {
         super(msg);
     }
