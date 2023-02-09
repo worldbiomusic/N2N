@@ -97,6 +97,7 @@ public class Node {
             }
         } catch (IOException e) {
             System.out.println("Error while sending data to " + node + ": " + e);
+            e.printStackTrace();
         }
         return replies;
     }
@@ -135,5 +136,13 @@ public class Node {
 
     public NodeSettings getSettings() {
         return settings;
+    }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "info=" + info +
+                ", settings=" + settings +
+                '}';
     }
 }
