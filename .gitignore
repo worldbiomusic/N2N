@@ -76,3 +76,5 @@ out/
 
 # n2n
 *.log
+src/META-INF/
+src/io/n2n/test/
