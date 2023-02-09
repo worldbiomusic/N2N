@@ -2,8 +2,6 @@ package io.n2n.node;
 
 import io.n2n.connection.Connection;
 import io.n2n.connection.Message;
-import io.n2n.connection.reply.ReplyFilter;
-import io.n2n.connection.reply.ReplyNoFilter;
 import io.n2n.router.Router;
 import io.n2n.stabilizer.StabilizerRunner;
 
@@ -20,28 +18,33 @@ public class Node {
     private NodeInfo info;
     private NodeSettings settings;
 
+    public Node(NodeInfo info) {
+        this.info = info;
+        this.settings = new NodeSettings();
+    }
+
     /**
      * Connects to the node with given id using the registered router and send a message(data) and
-     * gets replies. (Using {@link ReplyNoFilter} by default.)
+     * gets replies.
      *
      * @param id  the node's id
      * @param msg the message to send
      * @return replies filtered by given reply filter
      */
     public List<Message> sendData(String id, Message msg) {
-        return sendData(id, msg, new ReplyNoFilter());
+        return sendData(id, msg, true);
     }
 
     /**
      * Connects to the node with given id using the registered router and send a message(data) and
-     * gets replies, optionally {@link ReplyFilter} is used to filter replies from the node.
+     * gets replies.
      *
-     * @param id          the node's id
-     * @param msg         the message to send
-     * @param replyFilter the reply filter
+     * @param id        the node's id
+     * @param msg       the message to send
+     * @param waitReply whether to wait for replies
      * @return replies filtered by given reply filter
      */
-    public List<Message> sendData(String id, Message msg, ReplyFilter replyFilter) {
+    public List<Message> sendData(String id, Message msg, boolean waitReply) {
         Router router = this.settings.getRouter();
         if (router == null) {
             System.out.println("No router is registered to the node.");
@@ -54,42 +57,43 @@ public class Node {
             return new ArrayList<>();
         }
 
-        return sendData(receiver, msg, replyFilter);
+        return sendData(receiver, msg, waitReply);
     }
 
     /**
-     * Connects to the specific node and sends a message(data) and get replies.
-     * (Using {@link ReplyNoFilter} by default.)
+     * Connects to the specific node and sends a message(data) and gets replies.
      *
      * @param node the receiver
      * @param msg  the message to send
-     * @return replies filtered by given reply filter
+     * @return list of replies (may be empty if error occurred)
      */
     public List<Message> sendData(NodeInfo node, Message msg) {
-        return sendData(node, msg, new ReplyNoFilter());
+        return sendData(node, msg, true);
     }
 
     /**
-     * Connects to the specific node and sends a message(data) and get replies,
-     * optionally {@link ReplyFilter} is used to filter replies from the node.
+     * Connects to the specific node and sends a message(data) and gets replies.
      *
-     * @param node        the receiver
-     * @param msg         the message to send
-     * @param replyFilter the reply filter
-     * @return replies filtered by given reply filter
+     * @param node      the receiver
+     * @param msg       the message to send
+     * @param waitReply whether to wait for replies
+     * @return list of replies (may be empty if error occurred)
      */
-    public List<Message> sendData(NodeInfo node, Message msg, ReplyFilter replyFilter) {
+    public List<Message> sendData(NodeInfo node, Message msg, boolean waitReply) {
         List<Message> replies = new ArrayList<>();
 
         // create a connection
         try (Connection connection = new Connection(node)) {
             connection.sendData(msg);
 
-            // receive replies from the receiver
-            Message reply = connection.receiveData();
-            while (reply != null && !replyFilter.isEnd(reply)) {
-                replies.add(reply);
-                reply = connection.receiveData();
+            // get replies if want
+            if (waitReply) {
+                // receive replies from the receiver
+                Message reply = connection.receiveData();
+                while (reply != null) {
+                    replies.add(reply);
+                    reply = connection.receiveData();
+                }
             }
         } catch (IOException e) {
             System.out.println("Error while sending data to " + node + ": " + e);
