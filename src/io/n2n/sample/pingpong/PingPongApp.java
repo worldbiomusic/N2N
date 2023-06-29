@@ -31,10 +31,11 @@ public class PingPongApp {
             } else if (cmd.equalsIgnoreCase("status")) {
                 System.out.println(this.node);
             } else {
-                System.out.println("Wrong command. Try ");
-                System.out.println("init <id> <host> <port>");
-                System.out.println("ping <host> <port>");
-                System.out.println("exit");
+                System.out.println("Wrong command. Try following commands");
+                System.out.println("init <id> <host> <port>: initialize the node");
+                System.out.println("ping <host> <port>: send a ping message to host:port");
+                System.out.println("status: print my status");
+                System.out.println("exit: exit the program");
             }
         }
 
