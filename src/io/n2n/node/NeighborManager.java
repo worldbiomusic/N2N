@@ -22,7 +22,7 @@ public class NeighborManager {
     }
 
     public boolean addNode(NodeInfo node) {
-        if (isFull() || containsNode(node.getId())) {
+        if (isFull() || hasNode(node.getId())) {
             return false;
         }
 
@@ -38,7 +38,7 @@ public class NeighborManager {
         return this.nodes.get(id);
     }
 
-    public boolean containsNode(String id) {
+    public boolean hasNode(String id) {
         return this.nodes.containsKey(id);
     }
 

@@ -30,7 +30,7 @@ public class SocketListener extends Thread {
             while (settings.isActive()) {
                 try {
                     Socket client = server.accept();
-                    // set infinite timeout: socket will be closed after a handler dispatched it
+                    // set infinite timeout: socket will be closed after the handler closed after dispatched it
                     client.setSoTimeout(Config.SOCKET_READ_TIMEOUT);
                     System.out.println("New connection");
 

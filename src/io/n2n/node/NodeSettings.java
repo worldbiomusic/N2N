@@ -3,7 +3,6 @@ package io.n2n.node;
 import io.n2n.connection.Dispatcher;
 import io.n2n.router.Router;
 import io.n2n.stabilizer.Stabilizer;
-import io.n2n.stabilizer.StabilizerRunner;
 
 /**
  * Manages node's settings like state, number of max nodes and tools(router and stabilizer) also.
