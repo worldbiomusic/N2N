@@ -36,13 +36,29 @@ public class QueryHandler implements Handler {
         }
 
         // broadcast query
-        Thread thread = new Thread(() -> broadcastQuery(returnPID, key, ttl));
+        Thread thread = new Thread(() -> broadcastQuery(returnPID, key, Integer.parseInt(ttl)));
         thread.start();
     }
 
-    private void broadcastQuery(String returnPID, String key, String ttl) {
-        Map<String , NodeInfo> files = ((FSNode) node).getFiles();
+    private void broadcastQuery(String returnPID, String key, int ttl) {
+        Map<String, NodeInfo> files = ((FSNode) node).getFiles();
 
+        // find a peer who has the file
+        for (Map.Entry<String, NodeInfo> entry : files.entrySet()) {
+            String fileName = entry.getKey();
+            NodeInfo node = entry.getValue();
+            if (fileName.contains(key)) {
+                String data = fileName + " " + node.getId() + " " + node.getHost() + " " + node.getPort();
+                Message msg = new Message(MessageType.RESPONSE.name(), data);
+                this.node.sendData(node, msg);
+            }
+        }
+
+        // broadcast to other peers if ttl > 0
+        if (ttl > 0) {
+            Message msg = new Message(MessageType.QUERY.name(), returnPID + " " + key + " " + (ttl - 1));
+            this.node.getSettings().getNeighborManager().getNodes().forEach(n -> this.node.sendData(n.getId(), msg));
+        }
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.net.UnknownHostException;
 
 /**
  * A connection that has a socket and data which will be sent or received already.
- * Doesn't contain sender's info, but only sender's
+ * Doesn't contain sender's info, but only receiver's
  */
 public class Connection implements AutoCloseable {
     private NodeInfo receiver;
