@@ -36,8 +36,7 @@ public class Message {
      * @param data the message data
      */
     public Message(String type, String data) {
-        this.type = type.getBytes(Config.CHARSET);
-        this.data = data.getBytes(Config.CHARSET);
+        this(type.getBytes(Config.CHARSET), data.getBytes(Config.CHARSET));
     }
 
     /**

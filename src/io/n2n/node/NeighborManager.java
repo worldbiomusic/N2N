@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Manages neighbor nodes.
@@ -14,7 +15,7 @@ public class NeighborManager {
 
     public NeighborManager(NodeSettings settings) {
         this.settings = settings;
-        this.nodes = new HashMap<>();
+        this.nodes = new ConcurrentHashMap<>(); // thread-safe
     }
 
     public List<NodeInfo> getNodes() {

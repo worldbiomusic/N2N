@@ -2,6 +2,7 @@
 Sends a message to the neighbors and manages them.
 
 # Features
+- Unstructured P2P network
 - Using ping stabilizer and normal router
 
 # Message types

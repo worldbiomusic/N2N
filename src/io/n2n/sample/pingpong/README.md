@@ -1,6 +1,9 @@
 # Ping pong
 Sends a ping message and gets a pong message from the receiver node.
 
+# Features
+- Unstructured P2P network
+
 # commands
 - `init <id> <host> <port>`: initialize the node
 - `ping <host> <port>`: send a ping message to host:port
