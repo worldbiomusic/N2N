@@ -4,17 +4,18 @@ import io.n2n.connection.Message;
 import io.n2n.node.NeighborManager;
 import io.n2n.node.Node;
 import io.n2n.node.NodeInfo;
-import io.n2n.sample.filesharing.cmd.CommandExecutor;
+import io.n2n.sample.filesharing.cmd.CommandHandler;
 import io.n2n.sample.messenger.MessengerMsgType;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Command: join [target-host] [target-port]
  */
-public class JoinCmd implements CommandExecutor {
+public class JoinHandler extends CommandHandler {
     @Override
-    public void onCommand(Node sender, String label, String[] args) {
+    public void onCommand(Node sender, String label, String[] args, Map<String, List<String>> options) {
         String targetHost = args[0];
         int targetPort = Integer.parseInt(args[1]);
         NodeInfo target = new NodeInfo("", targetHost, targetPort);

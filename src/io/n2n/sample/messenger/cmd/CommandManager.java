@@ -1,6 +1,7 @@
 package io.n2n.sample.messenger.cmd;
 
 import io.n2n.connection.Message;
+import io.n2n.node.Node;
 import io.n2n.sample.messenger.MessengerMsgType;
 import io.n2n.sample.messenger.MessengerNode;
 
@@ -9,10 +10,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommandManager {
-    private MessengerNode node;
+    private Node node;
     private Map<String, CommandExecutor> commands;
 
-    public CommandManager(MessengerNode node) {
+    public CommandManager(Node node) {
         this.node = node;
         this.commands = new HashMap<>();
     }

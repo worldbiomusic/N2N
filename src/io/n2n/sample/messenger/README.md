@@ -1,5 +1,5 @@
 # Messenger
-Sends a message to the neighbors and manages them.
+Sends a message to the neighbors and manages them. (in development)
 
 # Features
 - Unstructured P2P network
