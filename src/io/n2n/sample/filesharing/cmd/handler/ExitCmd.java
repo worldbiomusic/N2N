@@ -15,4 +15,9 @@ public class ExitCmd extends CommandHandler {
         // shutdown the program
         System.exit(0);
     }
+
+    @Override
+    public String helpMsg() {
+        return ": Exit the program";
+    }
 }

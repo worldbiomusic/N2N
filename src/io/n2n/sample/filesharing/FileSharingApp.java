@@ -19,10 +19,8 @@ public class FileSharingApp {
         registerCommands(cmdListener);
 
         while (true) {
-            if (node.getSettings().isActive()) {
-                String cmd = System.console().readLine();
-                cmdListener.run(node, cmd);
-            }
+            String cmd = System.console().readLine();
+            cmdListener.run(node, cmd);
         }
     }
 

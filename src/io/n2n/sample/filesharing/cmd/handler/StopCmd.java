@@ -12,4 +12,9 @@ public class StopCmd extends CommandHandler {
         sender.getSettings().setActive(false);
         System.out.println("Stopping node...");
     }
+
+    @Override
+    public String helpMsg() {
+        return ": Stop the node";
+    }
 }

@@ -36,3 +36,6 @@ Shares some files in P2P. [Protocol designed by Nadeem Abdul Hamid. (Python vers
 
 # TODO
 - change message data structure to json format
+- auto ping stabilizer
+- ping cmd, ping handler
+- init cmd (init id, host, port)

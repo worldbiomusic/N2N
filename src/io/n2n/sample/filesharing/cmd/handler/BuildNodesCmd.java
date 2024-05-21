@@ -37,4 +37,9 @@ public class BuildNodesCmd extends CommandHandler {
 
         ((FSNode) this.node).buildNodes(host, port, hops);
     }
+
+    @Override
+    public String helpMsg() {
+        return "<host> <port> [-h <hops>]: Build nodes recursively with the specified hops";
+    }
 }

@@ -7,6 +7,7 @@ import io.n2n.node.Node;
 import io.n2n.node.NodeInfo;
 import io.n2n.router.NormalRouter;
 import io.n2n.sample.filesharing.handler.*;
+import io.n2n.sample.filesharing.stabilizer.PingStabilizer;
 
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,9 @@ public class FSNode extends Node {
 
         // router
         this.getSettings().setRouter(new NormalRouter(this));
+
+        // stabilizer
+        this.getSettings().setStabilizer(new PingStabilizer(this));
     }
 
     public Map<String, NodeInfo> getFiles() {

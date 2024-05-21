@@ -29,4 +29,9 @@ public class MessageCmd extends CommandHandler {
         Message msg = new Message(type, data);
         sender.sendData(node, msg);
     }
+
+    @Override
+    public String helpMsg() {
+        return "<data>+ -n <id> -t <type>: Send a message to the peer";
+    }
 }

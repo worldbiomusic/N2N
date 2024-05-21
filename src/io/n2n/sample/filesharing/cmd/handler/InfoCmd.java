@@ -38,4 +38,9 @@ public class InfoCmd extends CommandHandler {
             System.out.println("Node already exists in the neighbor list: " + nodeInfo.toString());
         }
     }
+
+    @Override
+    public String helpMsg() {
+        return "<host> <port>: Show information of the peer";
+    }
 }

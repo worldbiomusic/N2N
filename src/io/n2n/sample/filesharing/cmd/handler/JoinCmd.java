@@ -41,4 +41,9 @@ public class JoinCmd extends CommandHandler {
         Message reply = this.node.sendData(nodeInfo, msg).stream().findFirst().get();
         System.out.println("[JoinCmd] " + reply.getType() + ": " + reply.getData());
     }
+
+    @Override
+    public String helpMsg() {
+        return "";
+    }
 }
