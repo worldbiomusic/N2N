@@ -117,7 +117,7 @@ public class Node {
      * @param delay the delay (in milliseconds)
      */
     public void startStabilizer(int delay) {
-        new StabilizerRunner(this.settings.getStabilizer(), delay).start();
+        new StabilizerRunner(this, this.settings.getStabilizer(), delay).start();
     }
 
     /**
