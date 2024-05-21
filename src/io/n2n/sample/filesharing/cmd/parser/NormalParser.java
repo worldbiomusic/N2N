@@ -2,7 +2,7 @@ package io.n2n.sample.filesharing.cmd.parser;
 
 import io.n2n.sample.filesharing.cmd.CommandHandler;
 import io.n2n.sample.filesharing.cmd.CommandParser;
-import io.n2n.sample.filesharing.cmd.handler.MessageHandler;
+import io.n2n.sample.filesharing.cmd.handler.MessageCmd;
 
 import java.util.*;
 
@@ -13,7 +13,7 @@ import java.util.*;
 public class NormalParser implements CommandParser {
     public static void main(String[] args) {
         CommandParser parser = new NormalParser();
-        CommandHandler handler = new MessageHandler();
+        CommandHandler handler = new MessageCmd();
         String cmd = "msg -t join -n testid myid 25555";
         System.out.println("cmd: " + cmd);
         System.out.println("label: " + parser.label(cmd));
@@ -71,7 +71,12 @@ public class NormalParser implements CommandParser {
             String token = tokens.pop();
             if (token.startsWith("-")) {
                 // option args
-                int argsCount = optionCount.get(token);
+                int argsCount = optionCount.getOrDefault(token, -1);
+                if (argsCount == -1) {
+                    // invalid option
+                    throw new IllegalArgumentException("Invalid option: " + token);
+                }
+
                 List<String> args = new ArrayList<>();
                 while (argsCount > 0) {
                     args.add(tokens.pop());

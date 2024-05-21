@@ -19,7 +19,7 @@ public class ListHandler implements Handler {
         Message count_reply = new Message(MessageType.REPLY.name(), "" + this.node.getSettings().getNeighborManager().getNodeCount());
         connection.sendData(count_reply);
 
-        // send all nodes info (pid, host, port)
+        // send all nodes info (nid, host, port)
         this.node.getSettings().getNeighborManager().getNodes().forEach(node -> {
             String nodeInfo = node.getId() + " " + node.getHost() + " " + node.getPort();
             Message nodeInfo_reply = new Message(MessageType.REPLY.name(), nodeInfo);

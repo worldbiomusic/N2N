@@ -48,6 +48,7 @@ public class FSNode extends Node {
         NeighborManager neighborManager = this.getSettings().getNeighborManager();
 
         if (neighborManager.isFull()) {
+            System.out.println("Neighbor list is full" + " (max: " + neighborManager.getNodeCount() + ")");
             return;
         }
 
@@ -60,12 +61,13 @@ public class FSNode extends Node {
         String nodeId = reply.getData();
         newNode.setId(nodeId);
 
+        // check if node already exists
         if (neighborManager.hasNode(nodeId)) {
             System.out.println("Node already exists: " + newNode);
-            return;
+        } else {
+            neighborManager.addNode(newNode);
+            System.out.println("New node added: " + newNode);
         }
-        neighborManager.addNode(newNode);
-        System.out.println("New node added: " + newNode);
 
         // list DFS to build more nodes
         List<Message> replies = this.sendData(newNode, new Message(MessageType.LIST.name(), ""));

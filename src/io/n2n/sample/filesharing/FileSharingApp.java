@@ -3,7 +3,7 @@ package io.n2n.sample.filesharing;
 import io.n2n.node.Node;
 import io.n2n.node.NodeInfo;
 import io.n2n.sample.filesharing.cmd.CommandListener;
-import io.n2n.sample.filesharing.cmd.handler.MessageHandler;
+import io.n2n.sample.filesharing.cmd.handler.MessageCmd;
 import io.n2n.sample.filesharing.cmd.parser.NormalParser;
 
 public class FileSharingApp {
@@ -27,6 +27,6 @@ public class FileSharingApp {
     }
 
     private void registerCommands(CommandListener cmdManager) {
-        cmdManager.registerCommand("msg", new MessageHandler());
+        cmdManager.registerCommand("msg", new MessageCmd());
     }
 }

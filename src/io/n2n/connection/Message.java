@@ -109,11 +109,4 @@ public class Message {
                 "data=" + getData() +
                 '}';
     }
-
-    public static void main(String[] args) {
-        System.out.println("start");
-
-        Message msg = new Message("abcd", "hello there");
-        System.out.println(msg.getType() + ":" + msg.getData());
-    }
 }

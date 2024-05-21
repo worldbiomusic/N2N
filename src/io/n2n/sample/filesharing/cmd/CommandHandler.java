@@ -30,6 +30,11 @@ public abstract class CommandHandler {
     public abstract void onCommand(Node sender, String label, String[] args, Map<String, List<String>> options);
 
     /**
+     * Returns the help message for the command.
+     * @return Help message
+     */
+    public abstract String helpMsg();
+    /**
      * Adds options to the command. (Option prefix is - or --)
      *
      * <code>Example: msg -n <id> -m <type><data></code>
@@ -40,4 +45,5 @@ public abstract class CommandHandler {
     public Map<String, Integer> options() {
         return options;
     }
+
 }

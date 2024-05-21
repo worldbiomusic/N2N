@@ -8,7 +8,11 @@ import io.n2n.sample.filesharing.cmd.CommandHandler;
 import java.util.List;
 import java.util.Map;
 
-public class MessageHandler extends CommandHandler {
+/**
+ * Command handler for sending messages <br>
+ * Usage: <code>msg <data>+ -n <id> -t <type></code>
+ */
+public class MessageCmd extends CommandHandler {
     @Override
     protected void addOptions() {
         this.options.put("-n", 1);

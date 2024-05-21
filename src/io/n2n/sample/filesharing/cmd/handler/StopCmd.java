@@ -6,11 +6,10 @@ import io.n2n.sample.filesharing.cmd.CommandHandler;
 import java.util.List;
 import java.util.Map;
 
-public class ListenHandler extends CommandHandler {
-
+public class StopCmd extends CommandHandler {
     @Override
     public void onCommand(Node sender, String label, String[] args, Map<String, List<String>> options) {
-        sender.startListeningSocket();
-        System.out.println("Listening on " + sender.getInfo());
+        sender.getSettings().setActive(false);
+        System.out.println("Stopping node...");
     }
 }

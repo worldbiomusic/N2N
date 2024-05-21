@@ -13,7 +13,6 @@ public class NameHandler implements Handler {
         this.node = node;
     }
 
-
     @Override
     public void handle(Connection connection, Message msg) {
         Message reply = new Message(MessageType.REPLY.name(), this.node.getInfo().getId());

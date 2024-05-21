@@ -26,6 +26,8 @@ public class ResponseHandler implements Handler {
         // insert the queried node info into the file list
         NodeInfo newNode = new NodeInfo(peerId, host, port);
         ((FSNode) node).getFiles().put(fileName, newNode);
+
+        System.out.println("File found: " + fileName + " " + peerId + " " + host + " " + port);
     }
 
     @Override

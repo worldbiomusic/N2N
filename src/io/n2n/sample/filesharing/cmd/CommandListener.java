@@ -41,4 +41,7 @@ public class CommandListener {
         return cmd.substring(this.parser.label(cmd).length() + 1);
     }
 
+    public Map<String, CommandHandler> getHandlers() {
+        return handlers;
+    }
 }
